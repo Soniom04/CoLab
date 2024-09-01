@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { useParams, NavLink } from "react-router-dom";
+import { useParams, NavLink, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { CiClock2, CiCalendarDate } from "react-icons/ci";
 import { FaEdit, FaMapMarkerAlt, FaCalendarAlt, FaBriefcase } from "react-icons/fa";
@@ -18,6 +18,7 @@ const Profile = () => {
     const { userid: paramUserId } = useParams();
     const [isOwnProfile, setIsOwnProfile] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
 
     const fetchData = async () => {
         setIsLoading(true);
@@ -26,13 +27,11 @@ const Profile = () => {
             const profileUserId = paramUserId || user.userid;
             setIsOwnProfile(profileUserId === user.userid);
 
-            const [profileResponse, projectsResponse] = await Promise.all([
+            const [profileResponse] = await Promise.all([
                 axios.get(`https://colab1.onrender.com/api/colab/profile/user/${profileUserId}`),
-                axios.get(`https://colab1.onrender.com/api/colab/projects/user/${profileUserId}`)
             ]);
 
             setProfileData(profileResponse.data.profile);
-            setParr(projectsResponse.data.projects || []);
         } catch (err) {
             console.error("Error fetching profile data:", err);
             if (err.response) {
@@ -57,10 +56,22 @@ const Profile = () => {
         }
     };
 
+    const fetchProjects = async () => {
+        try {
+            const profileUserId = paramUserId || user.userid;
+            const response = await axios.get(`https://colab1.onrender.com/api/colab/projects/user/${profileUserId}`);
+            setParr(response.data.projects || []);
+        } catch (error) {
+            console.error('Error fetching projects:', error);
+            setError(error.message);
+        }
+    };
+    
+
     useEffect(() => {
         fetchData();
+        fetchProjects();
     }, [paramUserId]);
-
     const toggleExpand = () => {
         setIsExpanded(!isExpanded);
     };
@@ -114,7 +125,7 @@ const Profile = () => {
     return (
         <div className="bg-[#d2f0ff] min-h-screen z-[-10]">
             <Navbar />
-            <div className="container mx-auto py-12 px-40">
+            <div className="container mx-auto py-12 px-10 lg:px-40">
                 <div className="bg-white rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 hover:scale-[1.02] ">
                     <div className="md:flex ">
                         <div className="md:w-1/3 bg-rose-100 p-8 border-r border-blue-200">

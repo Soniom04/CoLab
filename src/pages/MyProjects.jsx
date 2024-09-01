@@ -14,7 +14,7 @@ const MyProjects = () => {
   return (
     <>
       <Navbar />
-      <div className="bg-[#d2f0ff] pt-20 min-h-screen">
+      <div className="bg-[#d2f0ff] pt-10 min-h-screen">
         <div className="w-full flex justify-center mb-8">
           <div className="flex items-center bg-white p-2 mt-2 rounded-full shadow-lg">
             <button

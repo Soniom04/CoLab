@@ -338,7 +338,6 @@ export const unsaveProject = async (userid, projectId) => {
 export const getSavedProjects = async (userid) => {
   try {
     const response = await axios.get(`${apiUrl}${routes.getSavedProjects(userid)}`);
-    console.log(response)
     if (response.status === 200) {
       return { success: true, data: response.data };
     } else {
@@ -361,7 +360,6 @@ export const createProject = async (projectData) => {
         error: 'All fields (projectname, description, roles, tags, userid) are required.',
       };
     }
-    console.log(`${apiUrl}${routes.createProject}`)
 
     const response = await axios.post(`${apiUrl}${routes.createProject}`, {
       projectname,
@@ -371,7 +369,6 @@ export const createProject = async (projectData) => {
       userid,
     });
 
-    console.log(response)
 
     if (response.status === 201) {
       return { success: true, project: response.data.project };
@@ -408,7 +405,6 @@ export const getProjectsByUser = async (userid) => {
 export const getAllProjects = async () => {
   try {
     const response = await axios.get(`${apiUrl}${routes.getAllProjects}`);
-    console.log(response)
     if (response.status === 200) {
       return { success: true, projects: response.data.projects };
     } else {

@@ -126,7 +126,7 @@ const tagOptions = [
     return (
       <>
         <Navbar />
-        <div className="bg-[#d2f0ff] pt-20 min-h-screen">
+        <div className="bg-[#d2f0ff] pt-10 min-h-screen">
           <div className="max-w-6xl mx-auto px-4 lg:px-6">
             <form
               onSubmit={handleSubmit}

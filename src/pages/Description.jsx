@@ -1,34 +1,3 @@
-// import Navbar from "../components/Navbar"
-// import { MdPeople } from "react-icons/md";
-// import { IoPersonSharp } from "react-icons/io5";
-// import ApplyPopup from "../components/ApplyPopup";
-// import React, { useState, useEffect, useContext } from 'react';
-// import { useParams } from 'react-router-dom';
-// import { getProjectDetails } from '../api';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { saveProjectThunk, unsaveProjectThunk } from "../redux/slices/SaveProjectSlice";
-// import toast from "react-hot-toast";
-// import { MdOutlineModeEditOutline, MdDelete } from 'react-icons/md';
-// import { useNavigate } from "react-router-dom";
-// import { deleteProject } from "../api";
-// import ConfirmationModal from "../components/ConfirmModal";
-// import FormattedText from '../components/FormattedText';
-// import Spinner from "../components/Spinner"
-// import NoResult from "../components/NoResult"
-// const project = {
-  //     user: {
-    //       id: 4,
-    //       img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdibDVxDer6htB4nmqh3gDgkkwo4b6281zeg&s",
-    //       name: 'Kanika',
-    //       desc: 'Hi I am Kanika Singh, an Aspiring Developer'
-    //     },
-    //     title: 'CoLab Web Frontend',
-    //     description: "<p><strong>Team Collab</strong>(by <em>Team Collaborators</em>)</p><ol><li>We are here</li></ol><ul><li>Om</li><li>Harish</li><li>Resha</li></ul>",
-    //     roles: ['Frontend Developer', 'UI/UX designer'],
-    //     tags: ['React', 'Tailwind CSS', 'JavaScript'],
-    //     Date: '2024-07-01T08:30:00.000Z'
-    // }
-    // const user = useContext()
     import { useEffect, useState } from 'react';
     import { useParams, useNavigate } from 'react-router-dom';
     import { useSelector, useDispatch } from 'react-redux';
@@ -76,20 +45,14 @@
       const fetchProject = async () => {
         try {
           const response = await getProjectDetails(projectId);
-          console.log(response)
           if (response.success) {
             setProjectDetails(response.project);
-            console.log(response)
             setIsOwner(response.project.userid._id === user.userid);
             await fetchProfile(response.project.userid._id);
-            console.log(response.project.applications)
             setIsApplied(response.project.applications.some((application) => application.userid === user.userid));
-            console.log(isApplied)
-          } else {
             setError(response.error);
           }
         } catch (err) {
-          console.error("Error fetching project details:", err);
           setError("An error occurred while fetching project details.");
         } finally {
           setLoading(false);
@@ -102,24 +65,18 @@
           const response = await fetchProfileDetails(profileId);
           if (response.success) {
             setImageUrl(response.data.profile.profileImage);
-          } else {
-            console.error(response.error);
           }
         } catch (err) {
-          console.error("Error fetching profile details:", err);
           setError("An error occurred while fetching profile details.");
         }
       };
     
       useEffect(() => {
-        console.log("frhwgbfjwh")
         fetchProject();
       }, [projectId,hasApplied]);
 
-      // Check if project is saved
       const dispatch = useDispatch();
   const savedProjects = useSelector(state => state.savedProjects.savedProjects);
-  // console.log(projectDetails)
   
   useEffect(() => {
     dispatch(fetchSavedProjects(user.userid));
@@ -146,7 +103,6 @@
         }
       }
     } catch (error) {
-      console.error("Error handling bookmark action:", error);
       toast.error("An unexpected error occurred while handling the bookmark.");
     }
   };
@@ -167,13 +123,11 @@
             toast.error("Failed to fetch project details.");
           }
         } catch (error) {
-          console.error("Error fetching project details:", error);
           toast.error("An error occurred while fetching project details.");
         }
       };
     
       const handleDeleteClick = () => {
-        console.log("uh")
         setIsDeleteModalOpen(true);
       };
       
@@ -182,7 +136,6 @@
             setLoading(true);
             const result = await deleteProject(projectDetails._id);
             dispatch(triggerReload());
-            console.log(result)
             if (result.success) {
                 toast.success("Project deleted successfully");
                 navigate('/projects'); // Adjust this path as needed
@@ -190,7 +143,6 @@
                 toast.error(result.error || "Failed to delete project");
             }
         } catch (error) {
-          console.error("Error deleting project:", error);
           toast.error("An unexpected error occurred while deleting the project");
         } finally {
           setLoading(false);
@@ -214,7 +166,7 @@
         <>
           <Navbar />
           <div className="bg-[#d2f0ff] min-h-screen w-full">
-            <div className="container mx-auto px-4 py-12 pt-20">
+            <div className="container mx-auto px-4 py-12 pt-10">
               <div className="max-w-4xl mx-auto bg-white p-6 shadow-md rounded-lg mt-12 relative">
                 <h1 className="text-3xl font-bold mb-4 text-gray-800">{projectDetails.projectname}</h1>
                 <div className='absolute top-5 right-5 space-x-3'>

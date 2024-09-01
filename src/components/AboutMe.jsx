@@ -77,73 +77,71 @@ const AboutMe = () => {
 
     if (isLoading) {
         return (
-            <div className=" min-h-screen ml-[400px] place-content-center">
-                <div className="flex justify-center items-center h-screen">
-                    <div className="loader"></div>
-                </div>
+            <div className="min-h-screen flex justify-center items-center">
+                <div className="loader"></div>
             </div>
         );
     }
 
     return (
-        <div className="bg-white w-[700px] ml-[80px] rounded-md mb-[70px]">
-            <h2 className="font-semibold text-xl mb-[20px] pl-[30px] pt-[35px]">About Me</h2>
-            <div className="h-[2px] bg-gray-100 w-[640px] mx-auto mb-[20px]"></div>
+        <div className="bg-white w-full max-w-3xl mx-auto rounded-md p-4 md:p-8 mb-[70px]">
+            <h2 className="font-semibold text-xl mb-4">About Me</h2>
+            <div className="h-[2px] bg-gray-100 w-full mb-4"></div>
             <form onSubmit={handleFormSubmit}>
-                {/* image */}
-                <div className="flex flex-col pl-[30px]">
-                    <label className="text-gray-800 mb-[7px]">Profile Image</label>
+                {/* Image */}
+                <div className="flex flex-col mb-4">
+                    <label className="text-gray-800 mb-2">Profile Image</label>
                     <input
                         type="file"
                         id="profileImage"
                         accept="image/*"
                         onChange={handleImageChange}
-                        className="mr-[30px] rounded-md py-[7px] mb-[20px]"
+                        className="rounded-md py-2 mb-4"
                     />
-                    {profileImage && <img src={profileImage} alt="Profile" className='w-32 object-cover rounded-full mb-[20px]' />}
+                    {profileImage && <img src={profileImage} alt="Profile" className='w-32 h-32 object-cover rounded-full mb-4' />}
                     {profileImage && (
                         <button 
-                            className="bg-red-500 py-[5px] rounded-lg w-fit text-white px-[5px] mb-[20px] hover:bg-red-400"
+                            className="bg-red-500 py-2 rounded-lg w-fit text-white px-4 hover:bg-red-400"
                             type="button"
                             onClick={handleRemoveImage}>
                             Remove
                         </button>
                     )}
                 </div>
-                {/* name */}
-                <div className="flex flex-col pl-[30px]">
-                    <label className="text-gray-800 mb-[7px]">Name</label>
+                {/* Name */}
+                <div className="flex flex-col mb-4">
+                    <label className="text-gray-800 mb-2">Name</label>
                     <input
                         type="text"
                         id="name"
                         value={username}
                         onChange={(e) => setName(e.target.value)}
-                        className="bg-gray-100 mr-[30px] rounded-md py-[7px] pl-[10px] border border-gray-400 mb-[20px]"
+                        className="bg-gray-100 rounded-md py-2 pl-2 border border-gray-400"
                     />
                 </div>
-                {/* location */}
-                <div className="flex flex-col pl-[30px]">
-                    <label className="text-gray-800 mb-[7px]">Location</label>
+                {/* Location */}
+                <div className="flex flex-col mb-4">
+                    <label className="text-gray-800 mb-2">Location</label>
                     <input
                         type="text"
                         id="location"
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
-                        className="bg-gray-100 mr-[30px] rounded-md py-[7px] pl-[10px] border border-gray-400 mb-[20px]"
+                        className="bg-gray-100 rounded-md py-2 pl-2 border border-gray-400"
                     />
                 </div>
-                {/* description */}
-                <div className="flex flex-col pl-[30px]">
-                    <label className="text-gray-800 mb-[7px]">Description</label>
+                {/* Description */}
+                <div className="flex flex-col mb-4">
+                    <label className="text-gray-800 mb-2">Description</label>
                     <textarea
                         id="description"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        className="bg-gray-100 mr-[30px] rounded-md py-[7px] pl-[10px] border border-gray-400 mb-[20px] h-[200px]"
+                        className="bg-gray-100 rounded-md py-2 pl-2 border border-gray-400 h-40"
                     />
                 </div>
                 <button 
-                    className="bg-green-500 p-2 rounded-lg text-white px-4 ml-[30px] mb-[20px] hover:bg-green-400"
+                    className="bg-green-500 p-2 rounded-lg text-white hover:bg-green-400"
                     type="submit">
                     Update Profile
                 </button>

@@ -16,24 +16,26 @@ const ProjectList = ({ roles = [], tags = [], userId, showSavedProjects = false 
   const projects = useSelector(state => state.projects.projects);
   const savedProjectIds = useSelector(state => state.savedProjects.savedProjects);
   const {user} = useContext(noteContext)
+  const { error, reload } = useSelector(state => state.projects);
+
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       try {
-        dispatch(fetchProjects());
+        await dispatch(fetchProjects()).unwrap();
         if (userId) {
-           dispatch(fetchSavedProjects(userId));
+          await dispatch(fetchSavedProjects(userId)).unwrap();
         }
-        setLoading(false)
       } catch (error) {
         console.error('Error fetching projects:', error);
       } finally {
+        setLoading(false);
       }
     };
-
+  
     loadData();
-  }, [dispatch, userId]);
-
+  }, [dispatch, userId, reload]);
+  
   const filterProjects = (projectsToFilter) => {
     if (!roles || !tags || !Array.isArray(roles) || !Array.isArray(tags)) {
       return projectsToFilter;
@@ -41,34 +43,35 @@ const ProjectList = ({ roles = [], tags = [], userId, showSavedProjects = false 
     if (roles.length === 0 && tags.length === 0 && !userId) {
       return projectsToFilter;
     }
-    console.log(userId)
     return projectsToFilter.filter((project) => {
       const userNameMatch = userId ? project.userid._id === userId : false;
       const roleMatch = roles.length ? roles.some((role) => project.roles.includes(role)) : false;
       const tagMatch = tags.length ? tags.some((tag) => project.tags.includes(tag)) : false;
-
+  
       return userNameMatch || roleMatch || tagMatch;
     });
   };
-
+  
   const getProjectsToDisplay = () => {
     if (showSavedProjects) {
       return projects.filter(project => savedProjectIds.includes(project._id));
     }
     return projects;
   };
-
+  
+  if (loading) {
+    return (
+      <Spinner/>
+    );
+  }
+  
   const projectsToDisplay = getProjectsToDisplay();
   const filteredProjects = filterProjects(projectsToDisplay);
-
-  if (loading) {
-    return <Spinner />;
-  }
-
+  
   if (showSavedProjects && savedProjectIds.length === 0) {
     return (
-      <div className="text-center">
-        <p className="text-gray-600 font-[500] text-lg mb-4 mt-40">You haven't saved any projects yet.</p>
+      <div className='w-full mt-[12px] text-center'> 
+        <p>You haven't saved any projects yet.</p>
         <button
           onClick={() => navigate('/projects')}
           className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
@@ -81,7 +84,7 @@ const ProjectList = ({ roles = [], tags = [], userId, showSavedProjects = false 
 
   return (
     <>
-      {filteredProjects.length > 0 ? (
+      {filteredProjects && filteredProjects.length > 0 ? (
         <div className="mx-auto py-8 w-[80%] min-width-[900px]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {filteredProjects.map((project) => (

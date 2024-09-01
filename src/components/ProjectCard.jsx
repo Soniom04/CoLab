@@ -201,115 +201,100 @@ const roleTagUrls = {
   };
 
   const ProjectCard = ({ project }) => {
+    console.log(project)
     const { user } = useContext(noteContext);
-      console.log(project)
-      console.log(project?.userid?.username)
-      // const { user } = useUser();
-      const username = project?.userid?.username || 'Unknown User'; // Fallback to 'Unknown User'
-      const imageUrl = project?.userid?.imageUrl || 'defaultImageUrl'; // Provide a default image URL
-      // const user = { id: "66cf1feffeb08da30e6a54b2", name: "om" };
-      const [loading,setLoading] = useState(true)
-      const dispatch = useDispatch();
-      const projectDate = new Date(project.createdAt);
-      const now = new Date();
-      const isToday = projectDate.toDateString() === now.toDateString();
-      const daysAgo = Math.floor((now - projectDate) / (1000 * 60 * 60 * 24));
-      const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-      const navigate = useNavigate()
-      // const user = useSelector((state) => state.user);
-  const savedProjects = useSelector(state => state.savedProjects.savedProjects);
+    const [loading, setLoading] = useState(true);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const username = project?.userid?.username || 'Unknown User'; // Fallback to 'Unknown 
+    const imageUrl = project?.userid?.imageUrl || 'defaultImageUrl'; 
+    const projectDate = new Date(project.createdAt);
+    const now = new Date();
+    const isToday = projectDate.toDateString() === now.toDateString();
+    const daysAgo = Math.floor((now - projectDate) / (1000 * 60 * 60 * 24));
+    
+    const savedProjects = useSelector(state => state.savedProjects.savedProjects);
+    const isProjectSaved = savedProjects.includes(project._id);
   
-  const isProjectSaved = savedProjects.includes(project._id);
-  console.log(isProjectSaved)
-
-  useEffect(() => {
-    dispatch(fetchSavedProjects(user.userid));
-  }, [dispatch, user.userid]);
-
-  const handleBookmark = async () => {
-    try {
-      if (isProjectSaved) {
-        const success = await dispatch(unsaveProjectAction(user.userid, project._id));
-        if (success) {
-          toast.success("Removed from Saved Projects");
+    const handleBookmark = async () => {
+      try {
+        if (isProjectSaved) {
+          const success = dispatch(unsaveProjectAction(user.userid, project._id));
+          if (success) {
+            toast.success("Removed from Saved Projects");
+          } else {
+            toast.error("Failed to remove from saved projects.");
+          }
         } else {
-          toast.error("Failed to remove from saved projects.");
+          const success = dispatch(saveProjectAction(user.userid, project._id));
+          if (success) {
+            toast.success("Added to saved projects");
+          } else {
+            toast.error("Failed to add to saved projects.");
+          }
         }
-      } else {
-        const success = await dispatch(saveProjectAction(user.userid, project._id));
-        if (success) {
-          toast.success("Added to saved projects");
-        } else {
-          toast.error("Failed to add to saved projects.");
-        }
+      } catch (error) {
+        toast.error("An unexpected error occurred while handling the bookmark.");
       }
-    } catch (error) {
-      console.error("Error handling bookmark action:", error);
-      toast.error("An unexpected error occurred while handling the bookmark.");
-    }
-  };
-      
-    const handleLinkClick = (url) => {
-        window.open(url, '_blank');
+    };
+  
+    const handleEditClick = async (projectId) => {
+      try {
+        const projectDetails = await getProjectDetails(project._id);
+        if (projectDetails) {
+          navigate('/new-project', {
+            state: {
+              isEditing: true,
+              projectId: projectId
+            }
+          });
+        } else {
+          toast.error("Failed to fetch project details.");
+        }
+      } catch (error) {
+        toast.error("An error occurred while fetching project details.");
+      }
+    };
+  
+    const handleDeleteClick = () => {
+      setIsDeleteModalOpen(true);
+    };
+  
+    const handleConfirmDelete = async () => {
+      try {
+        setLoading(true);
+        const result = await deleteProject(project._id);
+        if (result.success) {
+          toast.success("Project deleted successfully");
+          dispatch(triggerReload()); // Dispatch the triggerReload action
+          navigate('/projects');
+        } else {
+          toast.error(result.error || "Failed to delete project");
+        }
+      } catch (error) {
+        toast.error("An unexpected error occurred while deleting the project");
+      } finally {
+        setLoading(false);
+        setIsDeleteModalOpen(false);
+      }
     };
 
-    const projectId = project._id
-    const handleEditClick = async (projectId) => {
-        try {
-          const projectDetails = await getProjectDetails(project._id);
-          if (projectDetails) {
-            navigate('/new-project', {
-                state: {
-                  isEditing: true,
-                  projectId: projectId
-                }
-              });
-          } else {
-            toast.error("Failed to fetch project details.");
-          }
-        } catch (error) {
-          console.error("Error fetching project details:", error);
-          toast.error("An error occurred while fetching project details.");
-        }
-      };
-    
-      const handleDeleteClick = () => {
-        console.log("uh")
-        setIsDeleteModalOpen(true);
-      };
+    const handleLinkClick = (url) => {
+      window.open(url, '_blank');
+  };
       
-      const handleConfirmDelete = async () => {
-        try {
-            setLoading(true);
-            const result = await deleteProject(project._id);
-            dispatch(triggerReload());
-            console.log(result)
-            if (result.success) {
-                toast.success("Project deleted successfully");
-                navigate('/projects'); // Adjust this path as needed
-            } else {
-                toast.error(result.error || "Failed to delete project");
-            }
-        } catch (error) {
-          console.error("Error deleting project:", error);
-          toast.error("An unexpected error occurred while deleting the project");
-        } finally {
-          setLoading(false);
-          setIsDeleteModalOpen(false);
-        }
-      };
-
     return (
         <div className='flex flex-col p-1 space-y-1 rounded-lg border bg-white'>
             <div className='relative'>
-                <div className='flex space-x-2 items-center text-left'>
+                <div className='flex space-x-2 items-center text-left p-1'>
 
-                <NavLink to={`/users/${project.userid._id}`}>
+                <NavLink to={`/profile/${project.hostid}`}>
                     <img className="h-10 w-10 rounded-full" loading='lazy' src={imageUrl} alt='User'/>
                 </NavLink>
 
                     <div className='flex flex-col justify-center'>
-                    <NavLink to={`/users/${project.userid._id}`}>
+                    <NavLink to={`/profile/${project.hostid}`}>
                     <p className='text-sm hover:underline hover:text-blue-600 transition-all duration-200'>{username}</p>
                     </NavLink>
 
@@ -317,7 +302,7 @@ const roleTagUrls = {
                             <div className='text-sm'>{daysAgo} {daysAgo === 1 ? 'Day' : 'Days'} Ago</div>
                         )}
                     </div>
-                    <div className="absolute top-3 right-3 flex space-x-2">
+                    <div className="absolute top-2 right-3 flex space-x-2">
                     <button
                         onClick={() => handleBookmark(project._id)}
                         className={`text-lg border-2 p-1 ${isProjectSaved ? 'text-blue-600' : ''}`}
@@ -372,10 +357,10 @@ const roleTagUrls = {
                 </div>
             </div>
             <ConfirmationModal
-                isOpen={isDeleteModalOpen}
-                onClose={() => setIsDeleteModalOpen(false)}
-                onConfirm={handleConfirmDelete}
-                message="Are you sure you want to delete this project? This action cannot be undone."
+              isOpen={isDeleteModalOpen}
+              onClose={() => setIsDeleteModalOpen(false)}
+              onConfirm={handleConfirmDelete}
+              message="Are you sure you want to delete this project? This action cannot be undone."
             />
         </div>
     );

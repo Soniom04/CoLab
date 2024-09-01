@@ -21,13 +21,33 @@ const OTPVerification2 = ({ isOpen, onClose, onVerified, email }) => {
 
   const handleChange = (element, index) => {
     const value = element.value;
-    if (!/^[a-zA-Z0-9]$/.test(value)) return; // Allowing alphanumeric input
+    const newOtp = [...otp];
 
-    setOtp([...otp.map((d, idx) => (idx === index ? value : d))]);
+    // Handle backspace
+    if (value === '' && element.previousSibling) {
+      newOtp[index] = '';
+      setOtp(newOtp);
+      element.previousSibling.focus();
+      return;
+    }
+
+    // Allow only alphanumeric input
+    if (!/^[a-zA-Z0-9]$/.test(value)) return;
+
+    newOtp[index] = value;
+    setOtp(newOtp);
 
     // Move focus to the next input field
     if (element.nextSibling) {
       element.nextSibling.focus();
+    }
+  };
+
+  const handleKeyDown = (e, index) => {
+    if (e.key === 'Backspace' && otp[index] === '') {
+      if (e.target.previousSibling) {
+        e.target.previousSibling.focus();
+      }
     }
   };
 
@@ -74,6 +94,7 @@ const OTPVerification2 = ({ isOpen, onClose, onVerified, email }) => {
                 className="w-12 h-12 border-2 rounded text-center text-xl"
                 value={data}
                 onChange={(e) => handleChange(e.target, index)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
                 onFocus={(e) => e.target.select()}
               />
             ))}

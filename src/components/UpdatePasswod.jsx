@@ -61,45 +61,45 @@ const UpdatePassword = () => {
     };
 
     return (
-        <div className="bg-white w-[700px] flex flex-col rounded-md mb-[20px] ml-[80px]">
-            <h2 className="font-semibold text-xl mb-[20px] pl-[30px] pt-[35px]">Update password</h2>
-            <div className="h-[2px] bg-gray-100 w-[640px] mx-auto mb-[20px]"></div>
+        <div className="bg-white w-full sm:w-[700px] flex flex-col rounded-md mb-[20px] mx-auto p-6 sm:p-8">
+            <h2 className="font-semibold text-xl mb-[20px]">Update password</h2>
+            <div className="h-[2px] bg-gray-100 w-full mb-[20px]"></div>
             <form onSubmit={handleSubmit}>
-                <div className="flex flex-col pl-[30px]">
-                    <label className="text-gray-800 mb-[7px]">Current password</label>
+                <div className="flex flex-col mb-[20px]">
+                    <label className="text-gray-800 mb-[7px]" htmlFor="currentPassword">Current password</label>
                     <input
                         type="password"
                         id="currentPassword"
                         value={currentPassword}
                         onChange={(e) => setCurrentPassword(e.target.value)}
-                        className="bg-gray-100 mr-[30px] rounded-md py-[7px] pl-[10px] border border-gray-400 mb-[20px]"
+                        className="bg-gray-100 rounded-md py-[7px] px-[10px] border border-gray-400 w-full"
                         required
                     />
                 </div>
-                <div className="flex flex-col pl-[30px]">
-                    <label className="text-gray-800 mb-[7px]">New password</label>
+                <div className="flex flex-col mb-[20px]">
+                    <label className="text-gray-800 mb-[7px]" htmlFor="newPassword">New password</label>
                     <input
                         type="password"
                         id="newPassword"
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
-                        className="bg-gray-100 mr-[30px] rounded-md py-[7px] pl-[10px] border border-gray-400 mb-[20px]"
+                        className="bg-gray-100 rounded-md py-[7px] px-[10px] border border-gray-400 w-full"
                         required
                     />
                 </div>
-                <div className="flex flex-col pl-[30px]">
-                    <label className="text-gray-800 mb-[7px]">Confirm password</label>
+                <div className="flex flex-col mb-[20px]">
+                    <label className="text-gray-800 mb-[7px]" htmlFor="confirmPassword">Confirm password</label>
                     <input
                         type="password"
                         id="confirmPassword"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="bg-gray-100 mr-[30px] rounded-md py-[7px] pl-[10px] border border-gray-400 mb-[20px]"
+                        className="bg-gray-100 rounded-md py-[7px] px-[10px] border border-gray-400 w-full"
                         required
                     />
                 </div>
                 <button 
-                    className="bg-green-500 p-2 rounded-lg text-white px-4 ml-[30px] mb-[20px] hover:bg-green-400 disabled:bg-gray-400"
+                    className="bg-green-500 p-2 rounded-lg text-white w-full sm:w-auto sm:px-4 mb-[20px] hover:bg-green-400 disabled:bg-gray-400"
                     type="submit"
                     disabled={isLoading}
                 >

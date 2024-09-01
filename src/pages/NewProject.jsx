@@ -1,6 +1,4 @@
 import React, { useState, useCallback, useContext, useEffect } from 'react';
-import { Editor, EditorState, RichUtils, convertToRaw, getDefaultKeyBinding } from 'draft-js';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { NavLink } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { FaBold, FaItalic, FaListUl, FaListOl } from 'react-icons/fa';
@@ -124,6 +122,7 @@ export default function New_Project() {
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState(initialFormState);
 
+
   useEffect(() => {
     const loadProjectData = async () => {
       if (location.state?.isEditing && location.state?.projectId) {
@@ -147,17 +146,13 @@ export default function New_Project() {
           toast.error("An error occurred while fetching project details.");
         }
       } else {
-        setFormData(prevState => ({ ...prevState, userid: user.id }));
+        setFormData(prevState => ({ ...prevState, userid: user.userid }));
       }
       setIsLoading(false);
     };
 
     loadProjectData();
   }, [location.state, user.id]);
-
-  useEffect(() => {
-    console.log("Form data updated:", formData);
-  }, [formData]);
 
   const handleChange = (name, value) => {
     setFormData(prevState => {
@@ -185,7 +180,7 @@ export default function New_Project() {
   };
 
   const handleSaveProject = async (e) => {
-    e.preventDefault();
+        e.preventDefault();
     if (formData.projectname.length < 3) {
       alert("Project name must contain at least 3 characters.");
       return;
@@ -260,7 +255,7 @@ export default function New_Project() {
   return (
     <div>
       <Navbar />
-      <div className="pb-5 pt-24 bg-[#d2f0ff] min-h-screen">
+      <div className="pb-5 pt-14 bg-[#d2f0ff] min-h-screen">
         <form
           className="flex flex-col w-[90%] max-w-[800px] mx-auto bg-white rounded-md"
           onSubmit={handleSaveProject}

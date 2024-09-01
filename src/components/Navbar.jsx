@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { GiPowerButton } from "react-icons/gi";
 import { FaProjectDiagram, FaFolderOpen, FaPlusCircle } from "react-icons/fa";
+import { HiLogout } from "react-icons/hi";
+import { CgProfile } from "react-icons/cg";
 import PowerButton from "./PowerButton";
+import { useContext } from 'react';
+import noteContext from '../context/notes/NoteContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user } = useContext(noteContext);
 
   const navItems = [
     { name: 'Projects', icon: FaProjectDiagram, path: '/projects' },
@@ -28,10 +33,10 @@ const Navbar = () => {
                 <NavLink
                   key={item.name}
                   to={item.path}
-                  className={({ isActive }) => 
+                  className={({ isActive }) =>
                     `px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 flex items-center
-                    ${isActive 
-                      ? 'text-white bg-blue-700 shadow-md' 
+                    ${isActive
+                      ? 'text-white bg-blue-700 shadow-md'
                       : 'text-blue-100 hover:bg-blue-500 hover:text-white'
                     }`
                   }
@@ -75,10 +80,10 @@ const Navbar = () => {
               <NavLink
                 key={item.name}
                 to={item.path}
-                className={({ isActive }) => 
+                className={({ isActive }) =>
                   `block px-3 py-2 rounded-md text-base font-medium transition-all duration-300 flex items-center
-                  ${isActive 
-                    ? 'text-white bg-blue-700 shadow-md' 
+                  ${isActive
+                    ? 'text-white bg-blue-700 shadow-md'
                     : 'text-blue-100 hover:bg-blue-500 hover:text-white'
                   }`
                 }
@@ -87,9 +92,16 @@ const Navbar = () => {
                 {item.name}
               </NavLink>
             ))}
-            <div className="mt-4">
-              <PowerButton />
-            </div>
+            <NavLink to={`/profile/${user.userid}`}
+              className="block px-3 py-2 rounded-md text-base font-medium text-blue-100 hover:bg-blue-500 hover:text-white transition-all duration-300 flex items-center">
+              <CgProfile className="mr-2" />
+              View Profile
+            </NavLink>
+            <NavLink to="/login"
+              className="block px-3 py-2 rounded-md text-base font-medium text-blue-100 hover:bg-blue-500 hover:text-white transition-all duration-300 flex items-center">
+              <HiLogout className="mr-2" />
+              Logout
+            </NavLink>
           </div>
         </div>
       )}
